@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.XX</groupId>
-    <artifactId>ft-purchase</artifactId>
+    <artifactId>sjwspringboot</artifactId>
     <version>1.0</version>
     <name>ft_asset</name>
     <description>Let We Do Something For The World</description>
