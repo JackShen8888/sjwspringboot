@@ -1,5 +1,5 @@
  private BlockingQueue<Map<String, Object>> queue = new LinkedBlockingQueue<>(50);
-
+//queue.take
     @Override
     @Async(value = "myAsyncExecutor")
     public void dealLog() {
@@ -15,5 +15,19 @@
             } catch (Exception e) {
                 log.error("保存生成凭证log出错", e);
             }
+        }
+    }
+    //queue.put
+    @Override
+    public void updateVoucInfoAndLog(Long voucInfoId, String error, SSOUser ssouser) {
+        try {
+            log.info("生成凭证错误" + voucInfoId + "【" + voucInfoId + "】");
+            Map map = new HashMap();
+            map.put("voucInfoId", voucInfoId);
+            map.put("error", error);
+            map.put("ssouser", ssouser);
+            queue.put(map);
+        } catch (Exception e) {
+            log.error("保存生成凭证错误日志出错", e);
         }
     }
