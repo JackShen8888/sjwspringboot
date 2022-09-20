@@ -10,3 +10,48 @@ public class ApplicationStartUp implements ApplicationListener<ContextRefreshedE
         flowService.test();
     }
 }
+//线程池类
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @author liuzhuang
+ * @date 2021-04-28 14:34
+ */
+@Configuration
+public class ThreadPoolConfig {
+    @Bean
+    public ThreadPoolExecutor threadPoolExecutor() {
+        return new ThreadPoolExecutor(50, 200, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000));
+    }
+    @Bean("myAsyncExecutor")
+    public ThreadPoolExecutor MyAsyncExecutor() {
+        return new ThreadPoolExecutor(5, 10, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(50));
+    }
+   /* @Bean("sjwAsyncExecutor")
+    public ThreadPoolExecutor SjwAsyncExecutor() {
+        return new ThreadPoolExecutor(3, 3, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(50));
+    }*/
+    @Bean("sjwAsyncExecutor")
+    public ThreadPoolTaskExecutor executor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        int corePoolSize = 3;
+        executor.setCorePoolSize(corePoolSize);
+        int maxPoolSize = 3;
+        executor.setMaxPoolSize(maxPoolSize);
+        int queueCapacity = 50;
+        executor.setQueueCapacity(queueCapacity);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        String threadNamePrefix = "sjwAsyncExecutor-";
+        executor.setThreadNamePrefix(threadNamePrefix);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.initialize();
+        return executor;
+    }
+}
+
