@@ -1,0 +1,30 @@
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+/**
+ * @Author: shenjiawei
+ * @Date: 2022/6/30 19:41
+ */
+@Configuration
+@EnableScheduling
+public class ScheduleConfig implements SchedulingConfigurer{
+    @Override
+    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+        taskRegistrar.setScheduler(taskExecutor());
+    }
+
+    public static final String EXECUTOR_SERVICE = "scheduledExecutor";
+
+    @Bean(EXECUTOR_SERVICE)
+    public ScheduledThreadPoolExecutor taskExecutor() {
+        ScheduledThreadPoolExecutor executorService = new ScheduledThreadPoolExecutor(30);
+        executorService.setMaximumPoolSize(30);
+        executorService.setRejectedExecutionHandler(new ScheduledThreadPoolExecutor.CallerRunsPolicy());
+        return executorService;
+    }
+}
