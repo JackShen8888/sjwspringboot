@@ -1,0 +1,9 @@
+  @Autowired
+    ThreadPoolExecutor threadPoolExecutor;
+    if (isAsyn) {
+        threadPoolExecutor.execute(() -> {
+            updateBankAccountDetail(accountModifyParam, jsonData, true);
+        });
+    } else {
+        updateBankAccountDetail(accountModifyParam, jsonData, false);
+    }
