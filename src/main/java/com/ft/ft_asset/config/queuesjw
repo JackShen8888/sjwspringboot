@@ -1,0 +1,19 @@
+ private BlockingQueue<Map<String, Object>> queue = new LinkedBlockingQueue<>(50);
+
+    @Override
+    @Async(value = "myAsyncExecutor")
+    public void dealLog() {
+        log.info("-----处理log的异步线程在运行中-----");
+        while (true) {
+            try {
+                Map<String, Object> map = queue.take();
+                if (map != null) {
+                    insertLog(map);
+                }
+            } catch (InterruptedException e) {
+
+            } catch (Exception e) {
+                log.error("保存生成凭证log出错", e);
+            }
+        }
+    }
