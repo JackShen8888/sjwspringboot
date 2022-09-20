@@ -1,0 +1,12 @@
+//listener启动类
+@Component
+@Slf4j
+public class ApplicationStartUp implements ApplicationListener<ContextRefreshedEvent> {
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent){
+        VoucEngInfoLogService voucEngInfoLogService = contextRefreshedEvent.getApplicationContext().getBean(com.friendtimes.finance.service.VoucEngInfoLogService.class);
+        voucEngInfoLogService.dealLog();
+        ExtendTransactionFlowService flowService = contextRefreshedEvent.getApplicationContext().getBean(com.friendtimes.finance.service.ExtendTransactionFlowService.class);
+        flowService.test();
+    }
+}
