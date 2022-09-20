@@ -1,0 +1,38 @@
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * @author liuzhuang
+ * @date 2021-04-28 14:34
+ */
+@Configuration
+public class ThreadPoolConfig {
+    @Bean
+    public ThreadPoolExecutor threadPoolExecutor() {
+        return new ThreadPoolExecutor(50, 200, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1000));
+    }
+    @Bean("myAsyncExecutor")
+    public ThreadPoolExecutor MyAsyncExecutor() {
+        return new ThreadPoolExecutor(5, 10, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(50));
+    }
+    /*@Bean("myAsyncExecutor2")--也可以这样配置线程池
+    public ThreadPoolTaskExecutor executor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        int corePoolSize = 5;
+        executor.setCorePoolSize(corePoolSize);
+        int maxPoolSize = 15;
+        executor.setMaxPoolSize(maxPoolSize);
+        int queueCapacity = 50;
+        executor.setQueueCapacity(queueCapacity);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        String threadNamePrefix = "MyAsyncExecutor2-";
+        executor.setThreadNamePrefix(threadNamePrefix);
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.initialize();
+        return executor;
+    }*/
+}
