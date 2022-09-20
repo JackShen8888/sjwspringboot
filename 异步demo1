@@ -45,3 +45,26 @@
             }
         }
     }
+//类3
+ @Autowired
+     ExtendTransactionFlowMapper mapper;
+    @Async(value = "sjwAsyncExecutor")
+    @Override
+    public void dealTask(Map<String, Object> map){
+        Integer num = (Integer) map.get("num");
+        String sn = (String) map.get("sn");
+
+        OrderVo nowOrder = mapper.selectOneOrder(sn);
+        if(nowOrder!=null && nowOrder.getStatus()==0){
+            try {
+                log.info(sn+"-"+Thread.currentThread().getName()+"-"+num+"执行中====");
+                mapper.updateStatus(1,sn);
+                Thread.sleep(num*1000L);
+                mapper.updateStatus(2,sn);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }else {
+            log.info(sn+"-"+Thread.currentThread().getName()+"-"+num+"无需执行中===="+(nowOrder.getStatus()==1 ? "执行中" : "已完成"));
+        }
+    }
