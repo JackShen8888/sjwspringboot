@@ -1,0 +1,47 @@
+    //task类
+    @Autowired
+    ExtendTransactionFlowMapper mapper;
+    @Autowired
+    ExtendTransactionFlowService service;
+    @Scheduled(fixedRate = 1000 * 60)
+    public void test666() {
+        List<OrderVo> orders = mapper.queryOrderList();
+        for(OrderVo orderVo : orders){
+            service.addTask(orderVo.getNum(),orderVo.getSn());
+        }
+    }
+    //类2
+     private BlockingQueue<Map<String, Object>> queue = new LinkedBlockingQueue<>(50);
+    @Override
+    public void addTask(int num,String sn) {
+        try {
+            Map map = new HashMap(16);
+            map.put("num", num);
+            map.put("sn", sn);
+            if(!queue.contains(map)){
+                log.info("增加任务" + sn + "【" + num + "】");
+                queue.put(map);
+            }
+            log.info("queue当前数量"+queue.size());
+        } catch (Exception e) {
+            log.error("增加任务出错", e);
+        }
+    }
+@Autowired
+    ExtendAccountService service;
+    @Override
+    public void test(){
+        log.info("-----处理任务的异步线程在运行中-----");
+        while (true) {
+            try {
+                Map<String, Object> map = queue.take();
+                if (map != null) {
+                    service.dealTask(map);
+                }
+            } catch (InterruptedException e) {
+
+            } catch (Exception e) {
+                log.error("保存生成凭证log出错", e);
+            }
+        }
+    }
