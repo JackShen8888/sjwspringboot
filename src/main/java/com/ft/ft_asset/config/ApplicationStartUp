@@ -1,0 +1,19 @@
+import com.friendtimes.finance.service.VoucEngInfoLogService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+
+/**
+ * @Author: zhangzhiwei
+ * @Date: 2020/4/21 20:07
+ */
+@Component
+@Slf4j
+public class ApplicationStartUp implements ApplicationListener<ContextRefreshedEvent> {
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent){
+        VoucEngInfoLogService voucEngInfoLogService = contextRefreshedEvent.getApplicationContext().getBean(com.friendtimes.finance.service.VoucEngInfoLogService.class);
+        voucEngInfoLogService.dealLog();
+    }
+}
